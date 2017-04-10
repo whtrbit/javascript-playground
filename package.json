@@ -1,0 +1,49 @@
+{
+  "name": "Ar-drone2.0-web-client",
+  "description": "Express && Socket.IO && Ar-drone App for Ar-Drone 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whtrbit/ar-drone2.0-web-client"
+  },
+  "license": "MIT",
+  "version": "0.0.0",
+  "author": "Grzegorz Bielak",
+  "main": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ],
+          "sourceMap": true
+        }
+      ]
+    ]
+  },
+  "devDependencies": {
+    "babel-core": "*",
+    "babel-preset-es2015": "*",
+    "babelify": "*",
+    "browser-sync": "*",
+    "gulp": "*",
+    "gulp-util": "*",
+    "gulp-sourcemaps": "*",
+    "browserify": "*",
+    "vinyl-source-stream": "*",
+    "vinyl-buffer": "*",
+    "gulp-less": "*",
+    "jquery": "^3.1.1"
+  },
+  "dependencies": {
+    "ar-drone": "0.3.3",
+    "dronestream": "^1.1.1",
+    "express": "4.14.1",
+    "socket.io": "1.7.3"
+  }
+}
