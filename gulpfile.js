@@ -11,8 +11,8 @@ var fs = require('fs'),
 
 var path = {
   js: {
-    src: './src/',
-    dest: './dist/'
+    src: './assets/js/src/',
+    dest: './assets/js/dist/'
   },
   html: {
     src: 'index.html'
@@ -21,7 +21,7 @@ var path = {
 
 gulp.task('js', function () {
   var b = browserify({
-    entries: path.js.src + 'future.js',
+    entries: path.js.src + 'main.js',
     debug: true,
     transform: [babelify]
   });
@@ -43,10 +43,8 @@ gulp.task('watch', function() {
 
 gulp.task('bs', function () {
   browserSync({
-    proxy: 'localhost:3003',
-    port: 3003,
     files: [
-      'promises.js',
+      path.js.src + 'main.js',
       path.html.src
     ],
     ghostMode: false
