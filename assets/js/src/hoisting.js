@@ -12,6 +12,12 @@ class Hoisting {
     function scoped() {
       // a = 0;
       var b = 100;
+      console.log('Some code...');
+
+      // It converts into
+      // var b;
+      // console.log('Some code...');
+      // b = 100;
     }
 
     scoped();
