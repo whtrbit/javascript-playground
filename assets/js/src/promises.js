@@ -1,96 +1,109 @@
-"use strict";
+class Promises {
+  getWorkDone () {
+    return new Promise(function (resolve, reject) {
+      resolve('Well done.');
+      reject('Not this time.');
+    });
+  }
 
-// 0
-var getWorkDone = function () {
-  return new Promise(function (resolve, reject) {
-    resolve('Well done.');
-    reject('Not this time.');
-  });
-};
-var read = function () {
-  return Promise(function (resolve, reject) {
-    resolve('Cause is resolving this in the "Neauromancer".');
-    reject('Oww, I don\'t even remember what\'s what.');
-  });
-};
-var goSleep = function () {
-  return new Promise(function (resolve, reject) {
-    var req = new XMLHttpRequest();
-        req.open('GET', 'http://google.pl');
+  read () {
+    return Promise(function (resolve, reject) {
+      resolve('Cause is resolving this in the "Neauromancer".');
+      reject('Oww, I don\'t even remember what\'s what.');
+    });
+  }
 
-    resolve(req);
-    reject('Offline.');
-  });
-};
+  goSleep () {
+    return new Promise(function (resolve, reject) {
+      var req = new XMLHttpRequest();
+          req.open('GET', 'http://google.pl');
 
-// 1
-var fakeXhr = function () {
-  return new Promise(function (resolve, reject) {
-    var incoming = setTimeout(function () {
-      resolve('Done.');
-    }, 1000);
+      resolve(req);
+      reject('Offline.');
+    });
+  }
 
-    return incoming;
-  });
-};
-var transformRes = function (res) {
-  return String(res).toUpperCase();
-};
+  chaining () {
+    var fakeXhr = function () {
+      return new Promise(function (resolve, reject) {
+        var incoming = setTimeout(function () {
+          resolve('Done.');
+        }, 1000);
 
-fakeXhr().then(function (res) {
-  return transformRes(res);
-}).then(function (res) {
-  console.log(res);
-}, function (err) {
-  console.error(err);
-});
+        return incoming;
+      });
+    };
+    var transformRes = function (res) {
+      return String(res).toUpperCase();
+    };
 
-var gotIt = function (res) {
-  return transformRes(res);
-};
+    fakeXhr().then(function (res) {
+      return transformRes(res);
+    }).then(function (res) {
+      console.log(res);
+    }, function (err) {
+      console.error(err);
+    });
 
-fakeXhr()
-  .then(gotIt)
-  .then(function (gotIt) {
-    console.log(gotIt);
-  });
+    var gotIt = function (res) {
+      return transformRes(res);
+    };
 
-// 2
-var time = function () {
-  return new Promise(function (resolve, reject) {
-    setTimeout(function () {
-      var msg = 'Another promise.';
-      console.log(msg);
-      resolve(msg);
-    }, 2000);
-  });
-};
-var moreTime = function () {
-  return new Promise(function (resolve, reject) {
-    setTimeout(function () {
-      var msg = 'And another one...';
-      console.log(msg);
-      resolve(msg);
-    }, 2000);
-  });
-};
-time()
-  .then(moreTime);
+    fakeXhr() // so beutiful :D
+      .then(gotIt)
+      .then(function (gotIt) {
+        console.log(gotIt);
+      });
+  }
 
-// 4
-var req = function (done) {
-  var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/');
-      xhr.onload = function () {
-        done(null, xhr.response);
-      };
-      xhr.onerror = function () {
-        done(xhr.response);
-      };
-      xhr.send();
+  chaining2 () {
+    var time = function () {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          var msg = 'Another promise.';
+          console.log(msg);
+          resolve(msg);
+        }, 2000);
+      });
+    };
+    var moreTime = function () {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          var msg = 'And another one...';
+          console.log(msg);
+          resolve(msg);
+        }, 2000);
+      });
+    };
+    time()
+      .then(moreTime);
+  }
 
-  return xhr;
-};
-req(function (err, data) {
-  if (err) throw err;
-});
+  transformRes (res) {
+    return String(res).toUpperCase();
+  };
+
+  req (done) {
+    var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/');
+        xhr.onload = function () {
+          done(null, xhr.response);
+        };
+        xhr.onerror = function () {
+          done(xhr.response);
+        };
+        xhr.send();
+
+    return xhr;
+  };
+
+  run () {
+    this.chaining();
+    this.chaining2();
+    this.req(function (err, data) {
+      if (err) throw err;
+    });
+  }
+}
+
+export default Promises;
