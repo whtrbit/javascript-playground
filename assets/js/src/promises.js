@@ -101,7 +101,11 @@ class Promises {
     this.chaining();
     this.chaining2();
     this.req(function (err, data) {
-      if (err) throw err;
+      if (err) {
+        throw err;
+        return;
+      }
+      console.log(data.length);
     });
   }
 }
