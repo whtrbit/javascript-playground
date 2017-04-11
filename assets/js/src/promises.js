@@ -99,10 +99,13 @@ class Promises {
 
   race () {
     Promise.race([
-      fetch('/empty'),
+      new Promise(function (resolve, reject) {
+        setTimeout(() => reject(new Error('Some possible timeout err.')), 1)
+      }),
       fetch('/')
     ])
-    .then(response => console.log(response));
+    .then(response => console.log(response))
+    .catch(err => console.log(err));
   }
 
   run () {

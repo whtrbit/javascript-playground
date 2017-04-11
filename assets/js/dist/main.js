@@ -225,8 +225,14 @@ var Promises = function () {
   }, {
     key: 'race',
     value: function race() {
-      Promise.race([fetch('/empty'), fetch('/')]).then(function (response) {
+      Promise.race([new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          return reject(new Error('Some possible timeout err.'));
+        }, 1);
+      }), fetch('/')]).then(function (response) {
         return console.log(response);
+      }).catch(function (err) {
+        return console.log(err);
       });
     }
   }, {
