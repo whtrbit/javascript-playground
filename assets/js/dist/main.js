@@ -223,6 +223,13 @@ var Promises = function () {
       return xhr;
     }
   }, {
+    key: 'race',
+    value: function race() {
+      Promise.race([fetch('/empty'), fetch('/')]).then(function (response) {
+        return console.log(response);
+      });
+    }
+  }, {
     key: 'run',
     value: function run() {
       this.chaining();
@@ -234,6 +241,7 @@ var Promises = function () {
         }
         console.log(data.length);
       });
+      this.race();
     }
   }]);
 

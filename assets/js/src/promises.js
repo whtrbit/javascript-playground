@@ -97,6 +97,14 @@ class Promises {
     return xhr;
   };
 
+  race () {
+    Promise.race([
+      fetch('/empty'),
+      fetch('/')
+    ])
+    .then(response => console.log(response));
+  }
+
   run () {
     this.chaining();
     this.chaining2();
@@ -107,6 +115,7 @@ class Promises {
       }
       console.log(data.length);
     });
+    this.race();
   }
 }
 
