@@ -47,6 +47,9 @@ gulp.task('bs', function () {
       path.js.src + 'main.js',
       path.html.src
     ],
+    proxy: 'localhost:3000',
+    port: 3005,
+    open: false,
     ghostMode: false
   });
 });
