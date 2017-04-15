@@ -198,7 +198,15 @@ var _hoisting = require('./hoisting.js');
 
 var _hoisting2 = _interopRequireDefault(_hoisting);
 
+<<<<<<< HEAD
 var _generators = require('./generators.js');
+=======
+var _promises = require('./promises.js');
+
+var _promises2 = _interopRequireDefault(_promises);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+>>>>>>> 61d41b89aebec9c200f40854de4b20872e591885
 
 var _generators2 = _interopRequireDefault(_generators);
 
@@ -209,14 +217,22 @@ var Main = function () {
     (0, _classCallCheck3.default)(this, Main);
 
     this.hoisting = new _hoisting2.default();
+<<<<<<< HEAD
     this.generators = new _generators2.default();
+=======
+    this.promises = new _promises2.default();
+>>>>>>> 61d41b89aebec9c200f40854de4b20872e591885
   }
 
   (0, _createClass3.default)(Main, [{
     key: 'run',
     value: function run() {
       // this.hoisting.run();
+<<<<<<< HEAD
       this.generators.run();
+=======
+      this.promises.run();
+>>>>>>> 61d41b89aebec9c200f40854de4b20872e591885
     }
   }]);
   return Main;
@@ -225,6 +241,7 @@ var Main = function () {
 var main = new Main();
 main.run();
 
+<<<<<<< HEAD
 },{"./generators.js":1,"./hoisting.js":2,"babel-runtime/helpers/classCallCheck":7,"babel-runtime/helpers/createClass":8}],4:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
 },{"core-js/library/fn/object/define-property":11}],5:[function(require,module,exports){
@@ -2236,5 +2253,161 @@ if (hadRuntime) {
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{"_process":78}]},{},[3])
+=======
+},{"./hoisting.js":1,"./promises.js":3}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Promises = function () {
+  function Promises() {
+    _classCallCheck(this, Promises);
+  }
+
+  _createClass(Promises, [{
+    key: 'getWorkDone',
+    value: function getWorkDone() {
+      return new Promise(function (resolve, reject) {
+        resolve('Well done.');
+        reject('Not this time.');
+      });
+    }
+  }, {
+    key: 'read',
+    value: function read() {
+      return Promise(function (resolve, reject) {
+        resolve('Cause is resolving this in the "Neauromancer".');
+        reject('Oww, I don\'t even remember what\'s what.');
+      });
+    }
+  }, {
+    key: 'goSleep',
+    value: function goSleep() {
+      return new Promise(function (resolve, reject) {
+        var req = new XMLHttpRequest();
+        req.open('GET', 'http://google.pl');
+
+        resolve(req);
+        reject('Offline.');
+      });
+    }
+  }, {
+    key: 'chaining',
+    value: function chaining() {
+      var fakeXhr = function fakeXhr() {
+        return new Promise(function (resolve, reject) {
+          var incoming = setTimeout(function () {
+            resolve('Done.');
+          }, 1000);
+
+          return incoming;
+        });
+      };
+      var transformRes = function transformRes(res) {
+        return String(res).toUpperCase();
+      };
+
+      fakeXhr().then(function (res) {
+        return transformRes(res);
+      }).then(function (res) {
+        console.log(res);
+      }, function (err) {
+        console.error(err);
+      });
+
+      var gotIt = function gotIt(res) {
+        return transformRes(res);
+      };
+
+      fakeXhr() // so beutiful :D
+      .then(gotIt).then(function (gotIt) {
+        console.log(gotIt);
+      });
+    }
+  }, {
+    key: 'chaining2',
+    value: function chaining2() {
+      var time = function time() {
+        return new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            var msg = 'Another promise.';
+            console.log(msg);
+            resolve(msg);
+          }, 2000);
+        });
+      };
+      var moreTime = function moreTime() {
+        return new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            var msg = 'And another one...';
+            console.log(msg);
+            resolve(msg);
+          }, 2000);
+        });
+      };
+      time().then(moreTime);
+    }
+  }, {
+    key: 'transformRes',
+    value: function transformRes(res) {
+      return String(res).toUpperCase();
+    }
+  }, {
+    key: 'req',
+    value: function req(done) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/');
+      xhr.onload = function () {
+        done(null, xhr.response);
+      };
+      xhr.onerror = function () {
+        done(xhr.response);
+      };
+      xhr.send();
+
+      return xhr;
+    }
+  }, {
+    key: 'race',
+    value: function race() {
+      Promise.race([new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          return reject(new Error('Some possible timeout err.'));
+        }, 1);
+      }), fetch('/')]).then(function (response) {
+        return console.log(response);
+      }).catch(function (err) {
+        return console.log(err);
+      });
+    }
+  }, {
+    key: 'run',
+    value: function run() {
+      this.chaining();
+      this.chaining2();
+      this.req(function (err, data) {
+        if (err) {
+          throw err;
+          return;
+        }
+        console.log(data.length);
+      });
+      this.race();
+    }
+  }]);
+
+  return Promises;
+}();
+
+exports.default = Promises;
+
+},{}]},{},[2])
+>>>>>>> 61d41b89aebec9c200f40854de4b20872e591885
 
 //# sourceMappingURL=main.js.map
