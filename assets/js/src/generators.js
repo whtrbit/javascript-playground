@@ -61,7 +61,7 @@ class Generators {
       const riddle = yield 'What is it that belongs to you but others use it more than you?';
       console.log(riddle);
 
-      if (riddle !== prompt()) return 'You shall not pass!';
+      if (riddle !== 'My name') return 'You shall not pass!';
 
       return 'You shall pass.';
     }
@@ -69,7 +69,7 @@ class Generators {
     const bridge = bridgeRiddle();
     const q = bridge.next().value;
     console.log(q);
-    const a = bridge.next('My name').value;
+    const a = bridge.next(prompt()).value;
     console.log(a);
   }
 
