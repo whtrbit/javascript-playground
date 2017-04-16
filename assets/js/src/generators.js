@@ -14,10 +14,10 @@ class Generators {
 
   playingWithGenerator () {
     function *gen (x) {
-      console.log('x', x);
+      console.log('x', x); // => 5 in 1st iteration
       let y = 2 * (yield (x + 1));
       console.log('y', y);
-      let z = yield y / 3;
+      let z = yield y / 3; // => 12 in 2nd iteration
       console.log(z);
       return x + y + z;
     }
