@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof2 = require('babel-runtime/helpers/typeof');
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -81,7 +85,39 @@ var FunctionInvocations = function () {
       };
 
       var greetEinie = meetEinie.bind(einie);
-      console.log(greetEinie(1992));
+      console.log(greetEinie(1992) === meetEinie.call(einie, 1992));
+      console.log(meetEinie.apply(einie, [1992]));
+    }
+  }, {
+    key: 'arrayLikeObjects',
+    value: function arrayLikeObjects() {
+      var energyTypes = {
+        0: 'Potential',
+        1: 'Kinetic',
+        2: 'Gravitional',
+        3: 'Chemical',
+        4: 'Nuclear',
+        5: 'Elastic',
+        6: 'Motion',
+        7: {
+          0: 'Thermal',
+          1: 'Temperature',
+          length: 2
+        },
+        length: 8
+      };
+
+      console.log(Array.prototype.slice.call(energyTypes, 0));
+
+      for (var i = 0; i < energyTypes.length; i++) {
+        if ((0, _typeof3.default)(energyTypes[i]) === 'object') {
+          for (var j = 0; j < energyTypes[i].length; j++) {
+            console.log(energyTypes[i][j]);
+          }
+        } else {
+          console.log(energyTypes[i]);
+        }
+      }
     }
   }, {
     key: 'run',
@@ -90,6 +126,7 @@ var FunctionInvocations = function () {
       this.simpleCallApplyFunc();
       this.currying();
       this.curryingEinie();
+      this.arrayLikeObjects();
     }
   }]);
   return FunctionInvocations;
@@ -97,7 +134,7 @@ var FunctionInvocations = function () {
 
 exports.default = FunctionInvocations;
 
-},{"babel-runtime/helpers/classCallCheck":11,"babel-runtime/helpers/createClass":12}],2:[function(require,module,exports){
+},{"babel-runtime/helpers/classCallCheck":11,"babel-runtime/helpers/createClass":12,"babel-runtime/helpers/typeof":13}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

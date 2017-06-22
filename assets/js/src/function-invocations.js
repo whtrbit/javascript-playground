@@ -55,7 +55,38 @@ class FunctionInvocations {
     };
 
     const greetEinie = meetEinie.bind(einie);
-    console.log(greetEinie(1992));
+    console.log(greetEinie(1992) === meetEinie.call(einie, 1992));
+    console.log(meetEinie.apply(einie, [1992]));
+  }
+
+  arrayLikeObjects () {
+    const energyTypes = {
+      0: 'Potential',
+      1: 'Kinetic',
+      2: 'Gravitional',
+      3: 'Chemical',
+      4: 'Nuclear',
+      5: 'Elastic',
+      6: 'Motion',
+      7: {
+        0: 'Thermal',
+        1: 'Temperature',
+        length:  2
+      },
+      length: 8
+    };
+
+    console.log(Array.prototype.slice.call(energyTypes, 0));
+
+    for (let i = 0; i < energyTypes.length; i++) {
+      if (typeof energyTypes[i] === 'object') {
+        for (let j = 0; j < energyTypes[i].length; j++) {
+          console.log(energyTypes[i][j]);
+        }
+      } else {
+        console.log(energyTypes[i]);
+      }
+    }
   }
 
   run () {
@@ -63,6 +94,7 @@ class FunctionInvocations {
     this.simpleCallApplyFunc();
     this.currying();
     this.curryingEinie();
+    this.arrayLikeObjects();
   }
 }
 
