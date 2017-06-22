@@ -1,8 +1,4 @@
 class Hoisting {
-  constructor () {
-    this.a = 'a';
-  }
-
   logs () {
     console.log(typeof nonexisting); // undefined
     // console.log(nonexisting); // referenceError not defined
