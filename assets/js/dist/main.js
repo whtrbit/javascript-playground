@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof2 = require('babel-runtime/helpers/typeof');
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -99,25 +95,39 @@ var FunctionInvocations = function () {
         4: 'Nuclear',
         5: 'Elastic',
         6: 'Motion',
-        7: {
-          0: 'Thermal',
-          1: 'Temperature',
-          length: 2
-        },
+        7: 'Thermal',
         length: 8
       };
 
       console.log(Array.prototype.slice.call(energyTypes, 0));
+      console.log(Array.prototype.reverse.call(energyTypes, 0));
 
-      for (var i = 0; i < energyTypes.length; i++) {
-        if ((0, _typeof3.default)(energyTypes[i]) === 'object') {
-          for (var j = 0; j < energyTypes[i].length; j++) {
-            console.log(energyTypes[i][j]);
-          }
-        } else {
-          console.log(energyTypes[i]);
-        }
-      }
+      // using argumets
+      var listMeWithCommas = function listMeWithCommas() {
+        var args = Array.prototype.slice.call(arguments);
+
+        var filtered = args.filter(function (a) {
+          var joined = a.join(', ');
+
+          console.log(joined);
+        });
+      };
+      listMeWithCommas(Array.prototype.slice.call(energyTypes, 0));
+    }
+  }, {
+    key: 'variadicFuncs',
+    value: function variadicFuncs() {
+      var pi = [3, 1, 4, 1, 5, 9];
+      var people = ['Albert Einstein', 'Nikola Tesla', 'Leonadro da Vinci'];
+      var meetThemAll = function meetThemAll() {
+        var args = Array.prototype.slice.call(arguments);
+        var last = args.pop();
+
+        return 'Meet ' + args.join(', ') + ', and ' + last + '.';
+      };
+
+      console.log(Math.max.apply(null, pi));
+      console.log(meetThemAll.apply(null, people));
     }
   }, {
     key: 'run',
@@ -127,6 +137,7 @@ var FunctionInvocations = function () {
       this.currying();
       this.curryingEinie();
       this.arrayLikeObjects();
+      this.variadicFuncs();
     }
   }]);
   return FunctionInvocations;
@@ -134,7 +145,7 @@ var FunctionInvocations = function () {
 
 exports.default = FunctionInvocations;
 
-},{"babel-runtime/helpers/classCallCheck":11,"babel-runtime/helpers/createClass":12,"babel-runtime/helpers/typeof":13}],2:[function(require,module,exports){
+},{"babel-runtime/helpers/classCallCheck":11,"babel-runtime/helpers/createClass":12}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

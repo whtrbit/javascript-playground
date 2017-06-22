@@ -68,25 +68,42 @@ class FunctionInvocations {
       4: 'Nuclear',
       5: 'Elastic',
       6: 'Motion',
-      7: {
-        0: 'Thermal',
-        1: 'Temperature',
-        length:  2
-      },
+      7: 'Thermal',
       length: 8
     };
 
     console.log(Array.prototype.slice.call(energyTypes, 0));
+    console.log(Array.prototype.reverse.call(energyTypes, 0));
 
-    for (let i = 0; i < energyTypes.length; i++) {
-      if (typeof energyTypes[i] === 'object') {
-        for (let j = 0; j < energyTypes[i].length; j++) {
-          console.log(energyTypes[i][j]);
-        }
-      } else {
-        console.log(energyTypes[i]);
-      }
-    }
+    // using argumets
+    const listMeWithCommas = function () {
+      const args = Array.prototype.slice.call(arguments);
+
+      let filtered = args.filter(a => {
+        const joined = a.join(', ');
+
+        console.log(joined);
+      });
+    };
+    listMeWithCommas(Array.prototype.slice.call(energyTypes, 0));
+  }
+
+  variadicFuncs () {
+    const pi = [3, 1, 4, 1, 5, 9];
+    const people = [
+      'Albert Einstein',
+      'Nikola Tesla',
+      'Leonadro da Vinci'
+    ];
+    const meetThemAll = function () {
+      const args = Array.prototype.slice.call(arguments);
+      const last = args.pop();
+
+      return 'Meet ' + args.join(', ') + ', and ' + last + '.';
+    };
+
+    console.log(Math.max.apply(null, pi));
+    console.log(meetThemAll.apply(null, people));
   }
 
   run () {
@@ -95,6 +112,7 @@ class FunctionInvocations {
     this.currying();
     this.curryingEinie();
     this.arrayLikeObjects();
+    this.variadicFuncs();
   }
 }
 
