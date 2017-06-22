@@ -30,8 +30,8 @@ var FunctionInvocations = function () {
   }
 
   (0, _createClass3.default)(FunctionInvocations, [{
-    key: 'bindFunc',
-    value: function bindFunc() {
+    key: 'simpleBindFunc',
+    value: function simpleBindFunc() {
       var massEquation = function () {
         console.log(this.getMassEquation());
 
@@ -41,8 +41,8 @@ var FunctionInvocations = function () {
       }.bind(einie)();
     }
   }, {
-    key: 'callApplyFunc',
-    value: function callApplyFunc() {
+    key: 'simpleCallApplyFunc',
+    value: function simpleCallApplyFunc() {
       var createRealEnergyEquation = function createRealEnergyEquation(momentum) {
         console.log(this.e + ' = ' + this.m + '(' + this.c + '*' + this.c + ') + (' + momentum + this.c + ')' + '(' + momentum + this.c + ')');
       };
@@ -50,10 +50,46 @@ var FunctionInvocations = function () {
       createRealEnergyEquation.apply(einie, ['p']);
     }
   }, {
+    key: 'currying',
+    value: function currying() {
+      var meetInspirationalPerson = function meetInspirationalPerson(birthDate, profession) {
+        var hello = birthDate < 1000 ? 'Hi oldie! ' : 'Hi there! ';
+
+        switch (profession) {
+          case 'phisicist':
+            return hello + 'Did you know that E = mc2 is not the full equation?';
+
+          case 'engineer':
+            return hello + 'Did you know that Nikola Tesla tricked Morgan to build his tower to make his electromagnetical experiments?';
+
+          default:
+            return hello + 'Did you know that Leonardo da Vinci had no formal education?';
+        }
+      };
+
+      var greetOldEngineer = meetInspirationalPerson.bind(null, 600);
+      console.log(greetOldEngineer());
+      console.log(greetOldEngineer('engineer'));
+    }
+  }, {
+    key: 'curryingEinie',
+    value: function curryingEinie() {
+      var meetEinie = function meetEinie(birthDate) {
+        var hello = birthDate < 1000 ? 'Hi oldie! ' : 'Hi body! ';
+
+        return hello + 'Did you know that ' + this.getMassEquation() + ' is not actually full equation?';
+      };
+
+      var greetEinie = meetEinie.bind(einie);
+      console.log(greetEinie(1992));
+    }
+  }, {
     key: 'run',
     value: function run() {
-      this.bindFunc();
-      this.callApplyFunc();
+      this.simpleBindFunc();
+      this.simpleCallApplyFunc();
+      this.currying();
+      this.curryingEinie();
     }
   }]);
   return FunctionInvocations;
