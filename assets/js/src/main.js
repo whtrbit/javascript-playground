@@ -2,6 +2,7 @@ import Hoisting from './hoisting.js';
 import Promises from './promises.js';
 import Generators from './generators.js';
 import FunctionInvocations from './function-invocations.js';
+import Recursions from './recursions.js';
 
 class Main {
   constructor () {
@@ -9,6 +10,7 @@ class Main {
     this.promises = new Promises();
     this.generators = new Generators();
     this.functionInvocations = new FunctionInvocations();
+    this.recursions = new Recursions();
   }
 
   run () {
@@ -16,6 +18,7 @@ class Main {
     // this.promises.run();
     // this.generators.run();
     this.functionInvocations.run();
+    this.recursions.run();
   }
 }
 
