@@ -6,8 +6,7 @@ var fs = require('fs'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
     babelify = require('babelify'),
-    sourcemaps = require('gulp-sourcemaps'),
-    browserSync = require('browser-sync');
+    sourcemaps = require('gulp-sourcemaps');
 
 var path = {
   js: {
@@ -39,17 +38,4 @@ gulp.task('build', ['js']);
 
 gulp.task('watch', function() {
   gulp.watch(path.js.src + '**/*.js', [ 'js' ]);
-});
-
-gulp.task('bs', function () {
-  browserSync({
-    files: [
-      path.js.src + 'main.js',
-      path.html.src
-    ],
-    proxy: 'localhost:3000',
-    port: 3005,
-    open: false,
-    ghostMode: false
-  });
 });

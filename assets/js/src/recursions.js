@@ -7,7 +7,7 @@ class Recursions {
       const result = n * (fractorial(n - 1));
 
       return result;
-    }
+    };
     console.log(fractorial(170)); // max
   }
 
@@ -24,7 +24,7 @@ class Recursions {
       }
 
       return getMax(nums);
-    }
+    };
     console.log(getMax(sampleArr));
   }
 
@@ -32,7 +32,7 @@ class Recursions {
     const iterate = n => {
       console.time('iterate');
       for (let i = 1; i <= n; i++) {
-        if (i = n) {
+        if (i === n) {
           console.timeEnd('iterate');
           console.log('Break.');
         }
@@ -67,11 +67,23 @@ class Recursions {
     console.log(grow(8));
   }
 
+  reverseString () {
+    const reverseString = string => {
+      if (string === "") {
+        return "";
+      } else {
+        return reverseString(string.substring(1)) + string.charAt(0);
+      }
+    };
+    console.log(reverseString('live ,evil'));
+  }
+
   run () {
     this.fractorial();
     this.getMax();
     this.swimmingCounting();
     this.grow();
+    this.reverseString();
   }
 }
 
