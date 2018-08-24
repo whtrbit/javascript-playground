@@ -11,7 +11,8 @@
   "main": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "js": "gulp js",
+    "watch": "gulp watch"
   },
   "browserify": {
     "transform": [
@@ -35,18 +36,11 @@
     "browser-sync": "*",
     "browserify": "*",
     "gulp": "*",
-    "gulp-less": "*",
     "gulp-sourcemaps": "*",
     "gulp-util": "*",
-    "jquery": "^3.1.1",
     "vinyl-buffer": "*",
-    "vinyl-source-stream": "*"
+    "vinyl-source-stream": "*",
+    "babel-runtime": "^6.23.0"
   },
-  "dependencies": {
-    "ar-drone": "0.3.3",
-    "babel-runtime": "^6.23.0",
-    "dronestream": "^1.1.1",
-    "express": "4.14.1",
-    "socket.io": "1.7.3"
-  }
+  "dependencies": {}
 }
