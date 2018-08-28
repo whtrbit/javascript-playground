@@ -426,6 +426,7 @@ exports.default = Hoisting;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.LinkedList = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -442,7 +443,7 @@ var LinkedLists = function () {
         _classCallCheck(this, LinkedLists);
     }
 
-    _createClass(LinkedLists, [{
+    _createClass(LinkedLists, null, [{
         key: "run",
         value: function run() {
             var linkedList = new LinkedList();
@@ -468,7 +469,7 @@ var LinkedLists = function () {
 
 exports.default = LinkedLists;
 
-var LinkedList = function () {
+var LinkedList = exports.LinkedList = function () {
     function LinkedList() {
         _classCallCheck(this, LinkedList);
 
@@ -567,6 +568,50 @@ var LinkedList = function () {
             return null;
         }
     }, {
+        key: "deleteHead",
+        value: function deleteHead() {
+            if (!this.head) {
+                return null;
+            }
+
+            var deletedHead = this.head;
+
+            if (this.head.next) {
+                this.head = this.head.next;
+            } else {
+                this.head = null;
+                this.tail = null;
+            }
+
+            return deletedHead;
+        }
+    }, {
+        key: "deleteTail",
+        value: function deleteTail() {
+            var deletedTail = this.tail;
+
+            if (this.head === this.tail) {
+                this.head = null;
+                this.tail = null;
+
+                return deletedTail;
+            }
+
+            var currentNode = this.head;
+
+            while (currentNode.next) {
+                if (!currentNode.next.next) {
+                    currentNode.next = null;
+                } else {
+                    currentNode = currentNode.next;
+                }
+            }
+
+            this.tail = currentNode;
+
+            return deletedTail;
+        }
+    }, {
         key: "toArray",
         value: function toArray() {
             var nodes = [];
@@ -612,7 +657,7 @@ var LinkedListNode = function () {
     return LinkedListNode;
 }();
 
-},{"./utils/comparator":8}],5:[function(require,module,exports){
+},{"./utils/comparator":10}],5:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -641,6 +686,14 @@ var _linkedLists = require('./linked-lists.js');
 
 var _linkedLists2 = _interopRequireDefault(_linkedLists);
 
+var _queues = require('./queues');
+
+var _queues2 = _interopRequireDefault(_queues);
+
+var _stacks = require('./stacks');
+
+var _stacks2 = _interopRequireDefault(_stacks);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -654,10 +707,9 @@ var Main = function () {
     this.generators = new _generators2.default();
     this.functionInvocations = new _functionInvocations2.default();
     this.recursions = new _recursions2.default();
-    this.linkedLists = new _linkedLists2.default();
   }
 
-  _createClass(Main, [{
+  _createClass(Main, null, [{
     key: 'run',
     value: function run() {
       // this.hoisting.run();
@@ -665,17 +717,19 @@ var Main = function () {
       // this.generators.run();
       // this.functionInvocations.run();
       // this.recursions.run();
-      this.linkedLists.run();
+
+      _linkedLists2.default.run();
+      _queues2.default.run();
+      _stacks2.default.run();
     }
   }]);
 
   return Main;
 }();
 
-var main = new Main();
-main.run();
+Main.run();
 
-},{"./function-invocations.js":1,"./generators.js":2,"./hoisting.js":3,"./linked-lists.js":4,"./promises.js":6,"./recursions.js":7}],6:[function(require,module,exports){
+},{"./function-invocations.js":1,"./generators.js":2,"./hoisting.js":3,"./linked-lists.js":4,"./promises.js":6,"./queues":7,"./recursions.js":8,"./stacks":9}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -832,6 +886,90 @@ exports.default = Promises;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _linkedLists = require('./linked-lists');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Queues = function () {
+    function Queues() {
+        _classCallCheck(this, Queues);
+    }
+
+    _createClass(Queues, null, [{
+        key: 'run',
+        value: function run() {
+            var queue = new Queue();
+
+            queue.enqueue(1);
+            console.log(queue.toString());
+            queue.enqueue(3);
+            console.log(queue.toString());
+            queue.enqueue(5);
+            console.log(queue.toString());
+            queue.dequeue();
+            console.log('after dequeue', queue.toString());
+            queue.enqueue(1);
+            console.log('after enqueue', queue.toString());
+        }
+    }]);
+
+    return Queues;
+}();
+
+exports.default = Queues;
+
+var Queue = function () {
+    function Queue() {
+        _classCallCheck(this, Queue);
+
+        this.linkedList = new _linkedLists.LinkedList();
+    }
+
+    _createClass(Queue, [{
+        key: 'isEmpty',
+        value: function isEmpty() {
+            return !this.linkedList.tail;
+        }
+    }, {
+        key: 'peek',
+        value: function peek() {
+            if (!this.linkedList.head) {
+                return null;
+            } else {
+                return this.linkedList.head.value;
+            }
+        }
+    }, {
+        key: 'enqueue',
+        value: function enqueue(value) {
+            this.linkedList.append(value);
+        }
+    }, {
+        key: 'dequeue',
+        value: function dequeue() {
+            var removedHead = this.linkedList.deleteHead();
+
+            return removedHead ? removedHead.value : null;
+        }
+    }, {
+        key: 'toString',
+        value: function toString(callback) {
+            return this.linkedList.toString(callback);
+        }
+    }]);
+
+    return Queue;
+}();
+
+},{"./linked-lists":4}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
@@ -943,7 +1081,93 @@ var Recursions = function () {
 
 exports.default = Recursions;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _linkedLists = require('./linked-lists');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Stacks = function () {
+    function Stacks() {
+        _classCallCheck(this, Stacks);
+    }
+
+    _createClass(Stacks, null, [{
+        key: 'run',
+        value: function run() {
+            var stack = new Stack();
+
+            stack.push(1);
+            console.log(stack.toString());
+            stack.push(3);
+            console.log(stack.toString());
+            stack.push(5);
+            console.log(stack.toString());
+            stack.pop();
+            console.log('after pop', stack.toString());
+            stack.push(100);
+            console.log('after push', stack.toString());
+            stack.pop();
+            console.log('after pop', stack.toString());
+        }
+    }]);
+
+    return Stacks;
+}();
+
+exports.default = Stacks;
+
+var Stack = function () {
+    function Stack() {
+        _classCallCheck(this, Stack);
+
+        this.linkedList = new _linkedLists.LinkedList();
+    }
+
+    _createClass(Stack, [{
+        key: 'isEmpty',
+        value: function isEmpty() {
+            return !this.linkedList.tail;
+        }
+    }, {
+        key: 'peek',
+        value: function peek() {
+            if (this.isEmpty()) {
+                return null;
+            } else {
+                return this.linkedList.tail.value;
+            }
+        }
+    }, {
+        key: 'push',
+        value: function push(value) {
+            this.linkedList.append(value);
+        }
+    }, {
+        key: 'pop',
+        value: function pop() {
+            var removedTail = this.linkedList.deleteTail();
+
+            return removedTail ? removedTail.value : null;
+        }
+    }, {
+        key: 'toString',
+        value: function toString(callback) {
+            return this.linkedList.toString(callback);
+        }
+    }]);
+
+    return Stack;
+}();
+
+},{"./linked-lists":4}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

@@ -1,7 +1,7 @@
 import Comparator from "./utils/comparator";
 
 export default class LinkedLists {
-    run () {
+    static run () {
         const linkedList = new LinkedList();
 
         linkedList.append(100);
@@ -21,7 +21,7 @@ export default class LinkedLists {
     }
 }
 
-class LinkedList {
+export class LinkedList {
     constructor() {
         this.head = null;
         this.tail = null;
@@ -109,6 +109,48 @@ class LinkedList {
         }
 
         return null;
+    }
+
+    deleteHead () {
+        if (!this.head) {
+            return null;
+        }
+
+        const deletedHead = this.head;
+
+        if (this.head.next) {
+            this.head = this.head.next;
+        } else {
+            this.head = null;
+            this.tail = null;
+        }
+
+        return deletedHead;
+    }
+
+    deleteTail () {
+        const deletedTail = this.tail;
+
+        if (this.head === this.tail) {
+            this.head = null;
+            this.tail = null;
+
+            return deletedTail;
+        }
+
+        let currentNode = this.head;
+
+        while (currentNode.next) {
+            if (!currentNode.next.next) {
+                currentNode.next = null;
+            } else {
+                currentNode = currentNode.next;
+            }
+        }
+
+        this.tail = currentNode;
+
+        return deletedTail;
     }
 
     toArray() {
