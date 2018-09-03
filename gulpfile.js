@@ -1,7 +1,5 @@
-var fs = require('fs'),
-    gulp = require('gulp'),
+var gulp = require('gulp'),
     browserify = require('browserify'),
-    less = require('gulp-less'),
     gutil = require('gulp-util'),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),

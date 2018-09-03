@@ -7,6 +7,7 @@ import LinkedLists from './linked-lists.js';
 import Queues from "./queues";
 import Stacks from "./stacks";
 import HashTables from "./hash-tables";
+import Heaps from "./heaps";
 
 class Main {
   constructor () {
@@ -27,7 +28,9 @@ class Main {
     // LinkedLists.run();
     // Queues.run();
     // Stacks.run();
-    HashTables.run();
+    // HashTables.run();
+
+    Heaps.run();
   }
 }
 

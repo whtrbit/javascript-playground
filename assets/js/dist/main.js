@@ -477,7 +477,254 @@ var HashTable = function () {
     return HashTable;
 }();
 
-},{"./linked-lists":5}],4:[function(require,module,exports){
+},{"./linked-lists":6}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _comparator = require('./utils/comparator');
+
+var _comparator2 = _interopRequireDefault(_comparator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Heaps = function () {
+    function Heaps() {
+        _classCallCheck(this, Heaps);
+    }
+
+    _createClass(Heaps, null, [{
+        key: 'run',
+        value: function run() {
+            var heapMin = new HeapMin();
+            heapMin.add(9);
+            heapMin.add(1);
+            heapMin.add(0);
+            heapMin.add(100);
+            heapMin.remove(0);
+            heapMin.add(27);
+
+            var heapMax = new HeapMax();
+            heapMax.add(9);
+            heapMax.add(0);
+            heapMax.add(27);
+            heapMax.add(25);
+            heapMax.remove(27);
+
+            console.log('heapMin\n', heapMin, '\n\n');
+            console.log('heapMax\n', heapMax, '\n\n');
+        }
+    }]);
+
+    return Heaps;
+}();
+
+exports.default = Heaps;
+
+var Heap = function () {
+    function Heap() {
+        _classCallCheck(this, Heap);
+
+        this.compare = new _comparator2.default();
+
+        this.heapContainer = [];
+    }
+
+    _createClass(Heap, [{
+        key: 'add',
+        value: function add(item) {
+            this.heapContainer.push(item);
+            this.heapifyUp();
+
+            return this.heapContainer;
+        }
+    }, {
+        key: 'remove',
+        value: function remove(item) {
+            var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.compare;
+
+            var numberOfItemsToRemove = this.find(item, comparator).length;
+
+            for (var iteration = 0; iteration < numberOfItemsToRemove; iteration += 1) {
+                var indexToRemove = this.find(item, comparator).pop();
+
+                if (indexToRemove === this.heapContainer.length - 1) {
+                    this.heapContainer.pop();
+                } else {
+                    this.heapContainer[indexToRemove] = this.heapContainer.pop();
+
+                    var parentItem = this.getParent(indexToRemove);
+
+                    if (this.hasLeftChild(indexToRemove) && (!parentItem || this.pairIsInCorrectOrder(parentItem, this.heapContainer[indexToRemove]))) {
+                        this.heapifyDown(indexToRemove);
+                    } else {
+                        this.heapifyUp(indexToRemove);
+                    }
+                }
+            }
+
+            return this.heapContainer;
+        }
+    }, {
+        key: 'find',
+        value: function find(item) {
+            var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.compare;
+
+            var foundItemIndices = [];
+
+            for (var itemIndex = 0; itemIndex < this.heapContainer.length; itemIndex += 1) {
+                if (comparator.equal(item, this.heapContainer[itemIndex])) {
+                    foundItemIndices.push(itemIndex);
+                }
+            }
+
+            return foundItemIndices;
+        }
+    }, {
+        key: 'heapifyUp',
+        value: function heapifyUp(customStartIndex) {
+            var currentIndex = customStartIndex || this.heapContainer.length - 1;
+
+            while (this.hasParent(currentIndex) && !this.pairIsInCorrectOrder(this.getParent(currentIndex), this.heapContainer[currentIndex])) {
+                this.swap(currentIndex, this.getParentIndex(currentIndex));
+                currentIndex = this.getParentIndex(currentIndex);
+            }
+        }
+    }, {
+        key: 'heapifyDown',
+        value: function heapifyDown() {
+            var customStartIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+            var currentIndex = customStartIndex;
+            var nextIndex = null;
+
+            while (this.hasLeftChild(currentIndex)) {
+                if (this.hasRightChild(currentIndex) && this.pairIsInCorrectOrder(this.getRightChild(currentIndex), this.getLeftChild(currentIndex))) {
+                    nextIndex = this.getRightChildIndex(currentIndex);
+                } else {
+                    nextIndex = this.getLeftChildIndex(currentIndex);
+                }
+
+                if (this.pairIsInCorrectOrder(this.heapContainer[currentIndex], this.heapContainer[nextIndex])) {
+                    break;
+                }
+
+                this.swap(currentIndex, nextIndex);
+                currentIndex = nextIndex;
+            }
+        }
+    }, {
+        key: 'swap',
+        value: function swap(indexOne, indexTwo) {
+            var tmpSecond = this.heapContainer[indexTwo];
+
+            this.heapContainer[indexTwo] = this.heapContainer[indexOne];
+            this.heapContainer[indexOne] = tmpSecond;
+        }
+    }, {
+        key: 'hasParent',
+        value: function hasParent(childIndex) {
+            return this.getParentIndex(childIndex) >= 0;
+        }
+    }, {
+        key: 'hasLeftChild',
+        value: function hasLeftChild(parentIndex) {
+            return this.getLeftChildIndex(parentIndex) < this.heapContainer.length;
+        }
+    }, {
+        key: 'hasRightChild',
+        value: function hasRightChild(parentIndex) {
+            return this.getRightChildIndex(parentIndex) < this.heapContainer.length;
+        }
+    }, {
+        key: 'getParentIndex',
+        value: function getParentIndex(childIndex) {
+            return Math.floor((childIndex - 1) / 2);
+        }
+    }, {
+        key: 'getLeftChildIndex',
+        value: function getLeftChildIndex(parentIndex) {
+            return 2 * parentIndex + 1;
+        }
+    }, {
+        key: 'getRightChildIndex',
+        value: function getRightChildIndex(parentIndex) {
+            return 2 * parentIndex + 2;
+        }
+    }, {
+        key: 'getParent',
+        value: function getParent(childIndex) {
+            return this.heapContainer[this.getParentIndex(childIndex)];
+        }
+    }, {
+        key: 'getLeftChild',
+        value: function getLeftChild(parentIndex) {
+            return this.heapContainer[this.getLeftChildIndex(parentIndex)];
+        }
+    }, {
+        key: 'getRightChild',
+        value: function getRightChild(parentIndex) {
+            return this.heapContainer[this.getRightChildIndex(parentIndex)];
+        }
+    }, {
+        key: 'pairIsInCorrectOrder',
+        value: function pairIsInCorrectOrder(firstItem, secondItem) {
+            throw new Error('Implement comparison method in HeapMax/HeapMin classes.');
+        }
+    }]);
+
+    return Heap;
+}();
+
+var HeapMin = function (_Heap) {
+    _inherits(HeapMin, _Heap);
+
+    function HeapMin() {
+        _classCallCheck(this, HeapMin);
+
+        return _possibleConstructorReturn(this, (HeapMin.__proto__ || Object.getPrototypeOf(HeapMin)).call(this));
+    }
+
+    _createClass(HeapMin, [{
+        key: 'pairIsInCorrectOrder',
+        value: function pairIsInCorrectOrder(firstItem, secondItem) {
+            return this.compare.lessThanOrEqual(firstItem, secondItem);
+        }
+    }]);
+
+    return HeapMin;
+}(Heap);
+
+var HeapMax = function (_Heap2) {
+    _inherits(HeapMax, _Heap2);
+
+    function HeapMax() {
+        _classCallCheck(this, HeapMax);
+
+        return _possibleConstructorReturn(this, (HeapMax.__proto__ || Object.getPrototypeOf(HeapMax)).call(this));
+    }
+
+    _createClass(HeapMax, [{
+        key: 'pairIsInCorrectOrder',
+        value: function pairIsInCorrectOrder(firstItem, secondItem) {
+            return this.compare.greaterThanOrEqual(firstItem, secondItem);
+        }
+    }]);
+
+    return HeapMax;
+}(Heap);
+
+},{"./utils/comparator":12}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -541,7 +788,7 @@ var Hoisting = function () {
 
 exports.default = Hoisting;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -783,7 +1030,7 @@ var LinkedListNode = function () {
     return LinkedListNode;
 }();
 
-},{"./utils/comparator":11}],6:[function(require,module,exports){
+},{"./utils/comparator":12}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -824,6 +1071,10 @@ var _hashTables = require('./hash-tables');
 
 var _hashTables2 = _interopRequireDefault(_hashTables);
 
+var _heaps = require('./heaps');
+
+var _heaps2 = _interopRequireDefault(_heaps);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -851,7 +1102,9 @@ var Main = function () {
       // LinkedLists.run();
       // Queues.run();
       // Stacks.run();
-      _hashTables2.default.run();
+      // HashTables.run();
+
+      _heaps2.default.run();
     }
   }]);
 
@@ -860,7 +1113,7 @@ var Main = function () {
 
 Main.run();
 
-},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./hoisting.js":4,"./linked-lists.js":5,"./promises.js":7,"./queues":8,"./recursions.js":9,"./stacks":10}],7:[function(require,module,exports){
+},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./heaps":4,"./hoisting.js":5,"./linked-lists.js":6,"./promises.js":8,"./queues":9,"./recursions.js":10,"./stacks":11}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1013,7 +1266,7 @@ var Promises = function () {
 
 exports.default = Promises;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1097,7 +1350,7 @@ var Queue = function () {
     return Queue;
 }();
 
-},{"./linked-lists":5}],9:[function(require,module,exports){
+},{"./linked-lists":6}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1212,7 +1465,7 @@ var Recursions = function () {
 
 exports.default = Recursions;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1298,7 +1551,7 @@ var Stack = function () {
     return Stack;
 }();
 
-},{"./linked-lists":5}],11:[function(require,module,exports){
+},{"./linked-lists":6}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1372,6 +1625,6 @@ var Comparator = function () {
 
 exports.default = Comparator;
 
-},{}]},{},[6])
+},{}]},{},[7])
 
 //# sourceMappingURL=main.js.map
