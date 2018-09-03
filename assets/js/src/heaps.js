@@ -23,8 +23,8 @@ export default class Heaps {
 }
 
 class Heap {
-    constructor () {
-        this.compare = new Comparator();
+    constructor (comparatorFunction) {
+        this.compare = new Comparator(comparatorFunction);
 
         this.heapContainer = [];
     }
@@ -77,6 +77,8 @@ class Heap {
 
     heapifyUp (customStartIndex) {
         let currentIndex = customStartIndex || this.heapContainer.length - 1;
+
+        console.log(this.getParent(currentIndex), this.heapContainer[currentIndex], this.pairIsInCorrectOrder(this.getParent(currentIndex), this.heapContainer[currentIndex]));
 
         while (
             this.hasParent(currentIndex) &&
@@ -158,7 +160,7 @@ class Heap {
     }
 }
 
-class HeapMin extends Heap {
+export class HeapMin extends Heap {
     constructor () {
         super();
     }
@@ -168,7 +170,7 @@ class HeapMin extends Heap {
     }
 }
 
-class HeapMax extends Heap {
+export class HeapMax extends Heap {
     constructor () {
         super();
     }

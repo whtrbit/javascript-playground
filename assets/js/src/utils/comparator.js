@@ -1,6 +1,6 @@
 export default class Comparator {
-    constructor() {
-        this.compare = Comparator.defaultCompareFunction;
+    constructor(compareFunction) {
+        this.compare = compareFunction || Comparator.defaultCompareFunction;
     }
 
     /**
@@ -33,6 +33,7 @@ export default class Comparator {
     }
 
     greaterThanOrEqual(a, b) {
+        console.log(a, b)
         return this.greaterThan(a, b) || this.equal(a, b);
     }
 

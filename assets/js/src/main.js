@@ -8,6 +8,7 @@ import Queues from "./queues";
 import Stacks from "./stacks";
 import HashTables from "./hash-tables";
 import Heaps from "./heaps";
+import PriorityQueues from "./priority-queues";
 
 class Main {
   constructor () {
@@ -29,8 +30,8 @@ class Main {
     // Queues.run();
     // Stacks.run();
     // HashTables.run();
-
-    Heaps.run();
+    // Heaps.run();
+    PriorityQueues.run();
   }
 }
 

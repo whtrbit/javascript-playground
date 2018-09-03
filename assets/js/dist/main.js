@@ -483,6 +483,7 @@ var HashTable = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.HeapMax = exports.HeapMin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -532,10 +533,10 @@ var Heaps = function () {
 exports.default = Heaps;
 
 var Heap = function () {
-    function Heap() {
+    function Heap(comparatorFunction) {
         _classCallCheck(this, Heap);
 
-        this.compare = new _comparator2.default();
+        this.compare = new _comparator2.default(comparatorFunction);
 
         this.heapContainer = [];
     }
@@ -594,6 +595,8 @@ var Heap = function () {
         key: 'heapifyUp',
         value: function heapifyUp(customStartIndex) {
             var currentIndex = customStartIndex || this.heapContainer.length - 1;
+
+            console.log(this.getParent(currentIndex), this.heapContainer[currentIndex], this.pairIsInCorrectOrder(this.getParent(currentIndex), this.heapContainer[currentIndex]));
 
             while (this.hasParent(currentIndex) && !this.pairIsInCorrectOrder(this.getParent(currentIndex), this.heapContainer[currentIndex])) {
                 this.swap(currentIndex, this.getParentIndex(currentIndex));
@@ -686,7 +689,7 @@ var Heap = function () {
     return Heap;
 }();
 
-var HeapMin = function (_Heap) {
+var HeapMin = exports.HeapMin = function (_Heap) {
     _inherits(HeapMin, _Heap);
 
     function HeapMin() {
@@ -705,7 +708,7 @@ var HeapMin = function (_Heap) {
     return HeapMin;
 }(Heap);
 
-var HeapMax = function (_Heap2) {
+var HeapMax = exports.HeapMax = function (_Heap2) {
     _inherits(HeapMax, _Heap2);
 
     function HeapMax() {
@@ -724,7 +727,7 @@ var HeapMax = function (_Heap2) {
     return HeapMax;
 }(Heap);
 
-},{"./utils/comparator":12}],5:[function(require,module,exports){
+},{"./utils/comparator":13}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1030,7 +1033,7 @@ var LinkedListNode = function () {
     return LinkedListNode;
 }();
 
-},{"./utils/comparator":12}],7:[function(require,module,exports){
+},{"./utils/comparator":13}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1075,6 +1078,10 @@ var _heaps = require('./heaps');
 
 var _heaps2 = _interopRequireDefault(_heaps);
 
+var _priorityQueues = require('./priority-queues');
+
+var _priorityQueues2 = _interopRequireDefault(_priorityQueues);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1103,8 +1110,8 @@ var Main = function () {
       // Queues.run();
       // Stacks.run();
       // HashTables.run();
-
-      _heaps2.default.run();
+      // Heaps.run();
+      _priorityQueues2.default.run();
     }
   }]);
 
@@ -1113,7 +1120,131 @@ var Main = function () {
 
 Main.run();
 
-},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./heaps":4,"./hoisting.js":5,"./linked-lists.js":6,"./promises.js":8,"./queues":9,"./recursions.js":10,"./stacks":11}],8:[function(require,module,exports){
+},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./heaps":4,"./hoisting.js":5,"./linked-lists.js":6,"./priority-queues":8,"./promises.js":9,"./queues":10,"./recursions.js":11,"./stacks":12}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _heaps = require("./heaps");
+
+var _comparator = require("./utils/comparator");
+
+var _comparator2 = _interopRequireDefault(_comparator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PriorityQueues = function () {
+    function PriorityQueues() {
+        _classCallCheck(this, PriorityQueues);
+    }
+
+    _createClass(PriorityQueues, null, [{
+        key: "run",
+        value: function run() {
+            var priorityQueue = new PriorityQueue();
+            priorityQueue.add(100, 0);
+            priorityQueue.add(11, 2);
+            priorityQueue.add(500, 3);
+            priorityQueue.add(501, 4);
+            priorityQueue.add(101, 1);
+
+            console.log(priorityQueue);
+        }
+    }]);
+
+    return PriorityQueues;
+}();
+
+exports.default = PriorityQueues;
+
+var PriorityQueue = function (_HeapMin) {
+    _inherits(PriorityQueue, _HeapMin);
+
+    function PriorityQueue() {
+        _classCallCheck(this, PriorityQueue);
+
+        var _this = _possibleConstructorReturn(this, (PriorityQueue.__proto__ || Object.getPrototypeOf(PriorityQueue)).call(this));
+
+        _this.priorities = {};
+
+        _this.compare = new _comparator2.default(_this.comparePriority.bind(_this));
+        return _this;
+    }
+
+    _createClass(PriorityQueue, [{
+        key: "add",
+        value: function add(item) {
+            var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+            this.priorities[item] = priority;
+
+            _get(PriorityQueue.prototype.__proto__ || Object.getPrototypeOf(PriorityQueue.prototype), "add", this).call(this, item);
+
+            return this.priorities;
+        }
+    }, {
+        key: "remove",
+        value: function remove(item, customFindingComparator) {
+            _get(PriorityQueue.prototype.__proto__ || Object.getPrototypeOf(PriorityQueue.prototype), "remove", this).call(this, item, customFindingComparator);
+
+            delete this.priorities[item];
+
+            return this.priorities;
+        }
+    }, {
+        key: "changePriority",
+        value: function changePriority(item, priority) {
+            this.remove(item, new _comparator2.default(this.compareValue));
+            this.add(item, priority);
+
+            return this.priorities;
+        }
+    }, {
+        key: "findByValue",
+        value: function findByValue(item) {
+            return this.find(item, new _comparator2.default(this.compareValue));
+        }
+    }, {
+        key: "hasValue",
+        value: function hasValue(item) {
+            return this.findByValue(item).length > 0;
+        }
+    }, {
+        key: "compareValue",
+        value: function compareValue(a, b) {
+            if (a === b) {
+                return 0;
+            }
+
+            return a < b ? -1 : 1;
+        }
+    }, {
+        key: "comparePriority",
+        value: function comparePriority(a, b) {
+            if (this.priorities[a] === this.priorities[b]) {
+                return 0;
+            }
+
+            return this.priorities[a] < this.priorities[b] ? -1 : 1;
+        }
+    }]);
+
+    return PriorityQueue;
+}(_heaps.HeapMin);
+
+},{"./heaps":4,"./utils/comparator":13}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1266,7 +1397,7 @@ var Promises = function () {
 
 exports.default = Promises;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1350,7 +1481,7 @@ var Queue = function () {
     return Queue;
 }();
 
-},{"./linked-lists":6}],10:[function(require,module,exports){
+},{"./linked-lists":6}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1465,7 +1596,7 @@ var Recursions = function () {
 
 exports.default = Recursions;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1551,7 +1682,7 @@ var Stack = function () {
     return Stack;
 }();
 
-},{"./linked-lists":6}],12:[function(require,module,exports){
+},{"./linked-lists":6}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1563,10 +1694,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Comparator = function () {
-    function Comparator() {
+    function Comparator(compareFunction) {
         _classCallCheck(this, Comparator);
 
-        this.compare = Comparator.defaultCompareFunction;
+        this.compare = compareFunction || Comparator.defaultCompareFunction;
     }
 
     /**
@@ -1599,6 +1730,7 @@ var Comparator = function () {
     }, {
         key: "greaterThanOrEqual",
         value: function greaterThanOrEqual(a, b) {
+            console.log(a, b);
             return this.greaterThan(a, b) || this.equal(a, b);
         }
     }, {
