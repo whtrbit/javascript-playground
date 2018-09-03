@@ -93,7 +93,7 @@ export class LinkedList {
         return deletedNode;
     }
 
-    find (val = null) {
+    find (val = null, callback = undefined) {
         if (!this.head) {
             return null;
         }
@@ -101,6 +101,10 @@ export class LinkedList {
         let currentNode = this.head;
 
         while (currentNode) {
+            if (callback && callback(currentNode.value)) {
+                return currentNode;
+            }
+
             if (val !== null && this.compare.equal(currentNode.value, val)) {
                 return currentNode;
             }

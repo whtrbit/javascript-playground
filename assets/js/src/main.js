@@ -6,6 +6,7 @@ import Recursions from './recursions.js';
 import LinkedLists from './linked-lists.js';
 import Queues from "./queues";
 import Stacks from "./stacks";
+import HashTables from "./hash-tables";
 
 class Main {
   constructor () {
@@ -23,9 +24,10 @@ class Main {
     // this.functionInvocations.run();
     // this.recursions.run();
 
-    LinkedLists.run();
-    Queues.run();
-    Stacks.run();
+    // LinkedLists.run();
+    // Queues.run();
+    // Stacks.run();
+    HashTables.run();
   }
 }
 

@@ -360,6 +360,127 @@ exports.default = Generators;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _linkedLists = require('./linked-lists');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var HashTables = function () {
+    function HashTables() {
+        _classCallCheck(this, HashTables);
+    }
+
+    _createClass(HashTables, null, [{
+        key: 'run',
+        value: function run() {
+            var hashTable = new HashTable();
+
+            hashTable.set('Johnny Five', {
+                iq: 220
+            });
+            hashTable.set('Dr Brown', {
+                iq: 221
+            });
+
+            for (var i = 0; i <= 36; i++) {
+                hashTable.set('Index' + i, {
+                    id: i * i
+                });
+            }
+
+            console.log(hashTable);
+            console.log(hashTable.get('Index5'));
+            console.log(hashTable.remove('Index5'));
+            console.log(hashTable.get('Index5'));
+            console.log(hashTable.keys);
+        }
+    }]);
+
+    return HashTables;
+}();
+
+exports.default = HashTables;
+
+var HashTable = function () {
+    function HashTable() {
+        _classCallCheck(this, HashTable);
+
+        this.buckets = {};
+
+        this.keys = {};
+    }
+
+    _createClass(HashTable, [{
+        key: 'convertToHash',
+        value: function convertToHash(key) {
+            var hash = 5381;
+            var i = key.length;
+
+            while (i) {
+                hash = hash * 33 ^ key.charCodeAt(--i);
+            }
+
+            return hash >>> 0;
+        }
+    }, {
+        key: 'set',
+        value: function set(key, value) {
+            var hashKey = this.convertToHash(key);
+            this.keys[key] = hashKey;
+
+            if (!this.buckets[hashKey]) {
+                this.buckets[hashKey] = new _linkedLists.LinkedList();
+                this.buckets[hashKey].append({ key: key, value: value });
+            } else {
+                this.buckets[hashKey] = new _linkedLists.LinkedList();
+                this.buckets[hashKey].value.value = value;
+            }
+        }
+    }, {
+        key: 'get',
+        value: function get(key) {
+            var bucketLinkedList = this.buckets[this.convertToHash(key)];
+            var node = bucketLinkedList ? bucketLinkedList.find(null, function (nodeValue) {
+                return nodeValue.key === key;
+            }) : null;
+
+            return node ? node.value.value : undefined;
+        }
+    }, {
+        key: 'remove',
+        value: function remove(key) {
+            var hashKey = this.convertToHash(key);
+            delete this.keys[key];
+
+            var bucketLinkedList = this.buckets[hashKey];
+            var node = bucketLinkedList.find(null, function (nodeValue) {
+                return nodeValue.key === key;
+            });
+
+            if (node) {
+                return bucketLinkedList.remove(node.value);
+            }
+
+            return null;
+        }
+    }, {
+        key: 'has',
+        value: function has(key) {
+            return Object.hasOwnProperty.call(this.keys, key);
+        }
+    }]);
+
+    return HashTable;
+}();
+
+},{"./linked-lists":5}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
@@ -420,7 +541,7 @@ var Hoisting = function () {
 
 exports.default = Hoisting;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -550,6 +671,7 @@ var LinkedList = exports.LinkedList = function () {
         key: "find",
         value: function find() {
             var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+            var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 
             if (!this.head) {
                 return null;
@@ -558,6 +680,10 @@ var LinkedList = exports.LinkedList = function () {
             var currentNode = this.head;
 
             while (currentNode) {
+                if (callback && callback(currentNode.value)) {
+                    return currentNode;
+                }
+
                 if (val !== null && this.compare.equal(currentNode.value, val)) {
                     return currentNode;
                 }
@@ -657,7 +783,7 @@ var LinkedListNode = function () {
     return LinkedListNode;
 }();
 
-},{"./utils/comparator":10}],5:[function(require,module,exports){
+},{"./utils/comparator":11}],6:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -694,6 +820,10 @@ var _stacks = require('./stacks');
 
 var _stacks2 = _interopRequireDefault(_stacks);
 
+var _hashTables = require('./hash-tables');
+
+var _hashTables2 = _interopRequireDefault(_hashTables);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -718,9 +848,10 @@ var Main = function () {
       // this.functionInvocations.run();
       // this.recursions.run();
 
-      _linkedLists2.default.run();
-      _queues2.default.run();
-      _stacks2.default.run();
+      // LinkedLists.run();
+      // Queues.run();
+      // Stacks.run();
+      _hashTables2.default.run();
     }
   }]);
 
@@ -729,7 +860,7 @@ var Main = function () {
 
 Main.run();
 
-},{"./function-invocations.js":1,"./generators.js":2,"./hoisting.js":3,"./linked-lists.js":4,"./promises.js":6,"./queues":7,"./recursions.js":8,"./stacks":9}],6:[function(require,module,exports){
+},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./hoisting.js":4,"./linked-lists.js":5,"./promises.js":7,"./queues":8,"./recursions.js":9,"./stacks":10}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -882,7 +1013,7 @@ var Promises = function () {
 
 exports.default = Promises;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -966,7 +1097,7 @@ var Queue = function () {
     return Queue;
 }();
 
-},{"./linked-lists":4}],8:[function(require,module,exports){
+},{"./linked-lists":5}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1081,7 +1212,7 @@ var Recursions = function () {
 
 exports.default = Recursions;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1167,7 +1298,7 @@ var Stack = function () {
     return Stack;
 }();
 
-},{"./linked-lists":4}],10:[function(require,module,exports){
+},{"./linked-lists":5}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1241,6 +1372,6 @@ var Comparator = function () {
 
 exports.default = Comparator;
 
-},{}]},{},[5])
+},{}]},{},[6])
 
 //# sourceMappingURL=main.js.map
