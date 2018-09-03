@@ -25,7 +25,7 @@ export default class HashTables {
     }
 }
 
-class HashTable {
+export class HashTable {
     constructor () {
         this.buckets = {};
 
@@ -79,5 +79,9 @@ class HashTable {
 
     has (key) {
         return Object.hasOwnProperty.call(this.keys, key);
+    }
+
+    getKeys() {
+        return Object.keys(this.keys);
     }
 }

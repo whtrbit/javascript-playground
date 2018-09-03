@@ -362,6 +362,7 @@ exports.default = Generators;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.HashTable = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -405,7 +406,7 @@ var HashTables = function () {
 
 exports.default = HashTables;
 
-var HashTable = function () {
+var HashTable = exports.HashTable = function () {
     function HashTable() {
         _classCallCheck(this, HashTable);
 
@@ -471,6 +472,11 @@ var HashTable = function () {
         key: 'has',
         value: function has(key) {
             return Object.hasOwnProperty.call(this.keys, key);
+        }
+    }, {
+        key: 'getKeys',
+        value: function getKeys() {
+            return Object.keys(this.keys);
         }
     }]);
 
@@ -727,7 +733,7 @@ var HeapMax = exports.HeapMax = function (_Heap2) {
     return HeapMax;
 }(Heap);
 
-},{"./utils/comparator":13}],5:[function(require,module,exports){
+},{"./utils/comparator":14}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1033,7 +1039,7 @@ var LinkedListNode = function () {
     return LinkedListNode;
 }();
 
-},{"./utils/comparator":13}],7:[function(require,module,exports){
+},{"./utils/comparator":14}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1082,6 +1088,10 @@ var _priorityQueues = require('./priority-queues');
 
 var _priorityQueues2 = _interopRequireDefault(_priorityQueues);
 
+var _tries = require('./tries');
+
+var _tries2 = _interopRequireDefault(_tries);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1111,7 +1121,8 @@ var Main = function () {
       // Stacks.run();
       // HashTables.run();
       // Heaps.run();
-      _priorityQueues2.default.run();
+      // PriorityQueues.run();
+      _tries2.default.run();
     }
   }]);
 
@@ -1120,7 +1131,7 @@ var Main = function () {
 
 Main.run();
 
-},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./heaps":4,"./hoisting.js":5,"./linked-lists.js":6,"./priority-queues":8,"./promises.js":9,"./queues":10,"./recursions.js":11,"./stacks":12}],8:[function(require,module,exports){
+},{"./function-invocations.js":1,"./generators.js":2,"./hash-tables":3,"./heaps":4,"./hoisting.js":5,"./linked-lists.js":6,"./priority-queues":8,"./promises.js":9,"./queues":10,"./recursions.js":11,"./stacks":12,"./tries":13}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1244,7 +1255,7 @@ var PriorityQueue = function (_HeapMin) {
     return PriorityQueue;
 }(_heaps.HeapMin);
 
-},{"./heaps":4,"./utils/comparator":13}],9:[function(require,module,exports){
+},{"./heaps":4,"./utils/comparator":14}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1683,6 +1694,188 @@ var Stack = function () {
 }();
 
 },{"./linked-lists":6}],13:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _hashTables = require('./hash-tables');
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Tries = function () {
+    function Tries() {
+        _classCallCheck(this, Tries);
+    }
+
+    _createClass(Tries, null, [{
+        key: 'run',
+        value: function run() {
+            var trie = new Trie();
+
+            trie.addWord('exhaustive affirmation');
+            trie.addWord('redhot');
+            trie.addWord('redbone');
+
+            console.log(trie);
+            console.log(trie.suggestNextCharacters('ex'));
+            console.log(trie.suggestNextCharacters('red'));
+        }
+    }]);
+
+    return Tries;
+}();
+
+exports.default = Tries;
+
+var Trie = function () {
+    function Trie() {
+        _classCallCheck(this, Trie);
+
+        this.head = new TrieNode('*');
+    }
+
+    /**
+     * @param {string} word
+     */
+
+
+    _createClass(Trie, [{
+        key: 'addWord',
+        value: function addWord(word) {
+            var chars = Array.from(word);
+
+            var currentNode = this.head;
+
+            for (var charIdx = 0; charIdx < chars.length; charIdx++) {
+                var isComplete = charIdx === chars.length - 1;
+
+                currentNode = currentNode.addChild(chars[charIdx], isComplete);
+            }
+
+            return this;
+        }
+
+        /**
+         * @param {string} word
+         */
+
+    }, {
+        key: 'suggestNextCharacters',
+        value: function suggestNextCharacters(word) {
+            var lastChar = this.getLastCharacterNode(word);
+
+            if (!lastChar) {
+                return null;
+            }
+
+            return lastChar.suggestChildren();
+        }
+
+        /**
+         * @param {string} word
+         */
+
+    }, {
+        key: 'getLastCharacterNode',
+        value: function getLastCharacterNode(word) {
+            var chars = Array.from(word);
+
+            var currentNode = this.head;
+
+            for (var charIdx = 0; charIdx < chars.length; charIdx += 1) {
+                if (!currentNode.hasChild(chars[charIdx])) {
+                    return null;
+                }
+
+                currentNode = currentNode.getChild(chars[charIdx]);
+            }
+
+            return currentNode;
+        }
+    }]);
+
+    return Trie;
+}();
+
+var TrieNode = function () {
+    /**
+     * @param {string} character
+     * @param {boolean} isComplete
+     */
+    function TrieNode(character) {
+        var isComplete = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+        _classCallCheck(this, TrieNode);
+
+        this.character = character;
+        this.isComplete = isComplete;
+        this.children = new _hashTables.HashTable();
+    }
+
+    _createClass(TrieNode, [{
+        key: 'addChild',
+        value: function addChild(char) {
+            var isComplete = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+            if (!this.children.has(char)) {
+                this.children.set(char, new TrieNode(char, isComplete));
+            }
+
+            var childNode = this.children.get(char);
+
+            childNode.isComplete = childNode.isComplete || isComplete;
+
+            return childNode;
+        }
+    }, {
+        key: 'suggestChildren',
+        value: function suggestChildren() {
+            return [].concat(_toConsumableArray(this.children.getKeys()));
+        }
+
+        /**
+         * @param {string} char
+         *
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'hasChild',
+        value: function hasChild(char) {
+            return this.children.has(char);
+        }
+
+        /**
+         * @param {string} char
+         * @return {TrieNode}
+         */
+
+    }, {
+        key: 'getChild',
+        value: function getChild(char) {
+            return this.children.get(char);
+        }
+    }, {
+        key: 'toString',
+        value: function toString() {
+            var childrenAsString = this.suggestChildren().toString();
+            childrenAsString = childrenAsString ? ':' + childrenAsString : '';
+            var isCompleteString = this.isComplete ? '*' : '';
+
+            return '' + this.character + isCompleteString + childrenAsString;
+        }
+    }]);
+
+    return TrieNode;
+}();
+
+},{"./hash-tables":3}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
