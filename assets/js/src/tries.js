@@ -5,10 +5,15 @@ export default class Tries {
         const trie = new Trie();
 
         trie.addWord('exhaustive affirmation');
+
         trie.addWord('redhot');
         trie.addWord('redbone');
+        trie.addWord('redstone');
+
+        trie.removeWord('redhot');
 
         console.log(trie);
+
         console.log(trie.suggestNextCharacters('ex'));
         console.log(trie.suggestNextCharacters('red'));
     }
@@ -28,10 +33,40 @@ class Trie {
         let currentNode = this.head;
 
         for (let charIdx = 0; charIdx < chars.length; charIdx++) {
-            const isComplete = charIdx === chars.length - 1;
+            const isEndOfWord = charIdx === chars.length - 1;
 
-            currentNode = currentNode.addChild(chars[charIdx], isComplete);
+            currentNode = currentNode.addChild(chars[charIdx], isEndOfWord);
         }
+
+        return this;
+    }
+
+    /**
+     * @param {string} word
+     */
+    removeWord (word) {
+        const firstDepthDeletion = (currentNode, charIdx = 0) => {
+            if (charIdx >= word.length) {
+                return;
+            }
+
+            const char = word[charIdx];
+            const nextNode = currentNode.getChild(char);
+
+            if (nextNode === null) {
+                return;
+            }
+
+            firstDepthDeletion(nextNode, charIdx + 1);
+
+            if (charIdx === (word.length - 1)) {
+                nextNode.isEndOfWord = false;
+            }
+
+            currentNode.removeChild(char);
+        };
+
+        firstDepthDeletion(this.head);
 
         return this;
     }
@@ -67,32 +102,53 @@ class Trie {
 
         return currentNode;
     }
-
 }
 
 class TrieNode {
     /**
      * @param {string} character
-     * @param {boolean} isComplete
+     * @param {boolean} isEndOfWord
      */
-    constructor(character, isComplete = false) {
+    constructor(character, isEndOfWord = false) {
         this.character = character;
-        this.isComplete = isComplete;
+        this.isEndOfWord = isEndOfWord;
         this.children = new HashTable();
     }
 
-    addChild (char, isComplete = false) {
+    /**
+     * @param {string} char
+     * @param {boolean} isEndOfWord
+     *
+     * @return {TrieNode}
+     */
+    addChild (char, isEndOfWord = false) {
         if (!this.children.has(char)) {
-            this.children.set(char, new TrieNode(char, isComplete));
+            this.children.set(char, new TrieNode(char, isEndOfWord));
         }
 
         const childNode = this.children.get(char);
 
-        childNode.isComplete = childNode.isComplete || isComplete;
+        childNode.isEndOfWord = childNode.isEndOfWord || isEndOfWord;
 
         return childNode;
     }
 
+    /**
+     * @param {string} char
+     */
+    removeChild (char) {
+        const childNode = this.getChild(char);
+
+        if (childNode && !childNode.isEndOfWord && !childNode.hasChildren()) {
+            this.children.remove(char);
+        }
+
+        return this;
+    }
+
+    /**
+     * @return {string[]}
+     */
     suggestChildren () {
         return [...this.children.getKeys()];
     }
@@ -107,17 +163,28 @@ class TrieNode {
     }
 
     /**
+     * @return {boolean}
+     */
+    hasChildren() {
+        return this.children.getKeys().length !== 0;
+    }
+
+    /**
      * @param {string} char
+     *
      * @return {TrieNode}
      */
     getChild (char) {
         return this.children.get(char);
     }
 
-    toString() {
+    /**
+     * @return {string}
+     */
+    toString () {
         let childrenAsString = this.suggestChildren().toString();
-        childrenAsString = childrenAsString ? `:${childrenAsString}` : '';
-        const isCompleteString = this.isComplete ? '*' : '';
+            childrenAsString = childrenAsString ? `:${childrenAsString}` : '';
+        const isCompleteString = this.isEndOfWord ? '*' : '';
 
         return `${this.character}${isCompleteString}${childrenAsString}`;
     }

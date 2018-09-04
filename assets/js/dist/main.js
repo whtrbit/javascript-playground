@@ -1719,10 +1719,15 @@ var Tries = function () {
             var trie = new Trie();
 
             trie.addWord('exhaustive affirmation');
+
             trie.addWord('redhot');
             trie.addWord('redbone');
+            trie.addWord('redstone');
+
+            trie.removeWord('redhot');
 
             console.log(trie);
+
             console.log(trie.suggestNextCharacters('ex'));
             console.log(trie.suggestNextCharacters('red'));
         }
@@ -1753,10 +1758,45 @@ var Trie = function () {
             var currentNode = this.head;
 
             for (var charIdx = 0; charIdx < chars.length; charIdx++) {
-                var isComplete = charIdx === chars.length - 1;
+                var isEndOfWord = charIdx === chars.length - 1;
 
-                currentNode = currentNode.addChild(chars[charIdx], isComplete);
+                currentNode = currentNode.addChild(chars[charIdx], isEndOfWord);
             }
+
+            return this;
+        }
+
+        /**
+         * @param {string} word
+         */
+
+    }, {
+        key: 'removeWord',
+        value: function removeWord(word) {
+            var firstDepthDeletion = function firstDepthDeletion(currentNode) {
+                var charIdx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+                if (charIdx >= word.length) {
+                    return;
+                }
+
+                var char = word[charIdx];
+                var nextNode = currentNode.getChild(char);
+
+                if (nextNode === null) {
+                    return;
+                }
+
+                firstDepthDeletion(nextNode, charIdx + 1);
+
+                if (charIdx === word.length - 1) {
+                    nextNode.isEndOfWord = false;
+                }
+
+                currentNode.removeChild(char);
+            };
+
+            firstDepthDeletion(this.head);
 
             return this;
         }
@@ -1806,33 +1846,62 @@ var Trie = function () {
 var TrieNode = function () {
     /**
      * @param {string} character
-     * @param {boolean} isComplete
+     * @param {boolean} isEndOfWord
      */
     function TrieNode(character) {
-        var isComplete = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+        var isEndOfWord = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
         _classCallCheck(this, TrieNode);
 
         this.character = character;
-        this.isComplete = isComplete;
+        this.isEndOfWord = isEndOfWord;
         this.children = new _hashTables.HashTable();
     }
+
+    /**
+     * @param {string} char
+     * @param {boolean} isEndOfWord
+     *
+     * @return {TrieNode}
+     */
+
 
     _createClass(TrieNode, [{
         key: 'addChild',
         value: function addChild(char) {
-            var isComplete = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var isEndOfWord = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             if (!this.children.has(char)) {
-                this.children.set(char, new TrieNode(char, isComplete));
+                this.children.set(char, new TrieNode(char, isEndOfWord));
             }
 
             var childNode = this.children.get(char);
 
-            childNode.isComplete = childNode.isComplete || isComplete;
+            childNode.isEndOfWord = childNode.isEndOfWord || isEndOfWord;
 
             return childNode;
         }
+
+        /**
+         * @param {string} char
+         */
+
+    }, {
+        key: 'removeChild',
+        value: function removeChild(char) {
+            var childNode = this.getChild(char);
+
+            if (childNode && !childNode.isEndOfWord && !childNode.hasChildren()) {
+                this.children.remove(char);
+            }
+
+            return this;
+        }
+
+        /**
+         * @return {string[]}
+         */
+
     }, {
         key: 'suggestChildren',
         value: function suggestChildren() {
@@ -1852,7 +1921,18 @@ var TrieNode = function () {
         }
 
         /**
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'hasChildren',
+        value: function hasChildren() {
+            return this.children.getKeys().length !== 0;
+        }
+
+        /**
          * @param {string} char
+         *
          * @return {TrieNode}
          */
 
@@ -1861,12 +1941,17 @@ var TrieNode = function () {
         value: function getChild(char) {
             return this.children.get(char);
         }
+
+        /**
+         * @return {string}
+         */
+
     }, {
         key: 'toString',
         value: function toString() {
             var childrenAsString = this.suggestChildren().toString();
             childrenAsString = childrenAsString ? ':' + childrenAsString : '';
-            var isCompleteString = this.isComplete ? '*' : '';
+            var isCompleteString = this.isEndOfWord ? '*' : '';
 
             return '' + this.character + isCompleteString + childrenAsString;
         }
